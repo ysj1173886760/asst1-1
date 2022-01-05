@@ -103,7 +103,20 @@ You will not need to make use of any other std::thread API calls in this assignm
   among threads is necessary.). In your writeup, describe your approach to parallelization
   and report the final 8-thread speedup obtained. 
 5. Now run your improved code with 16 threads. Is performance noticably greater than when running with eight threads? Why or why not? 
-  
+
+#### Answers:
+  this is the speedup graph
+
+![20220105123414](https://picsheep.oss-cn-beijing.aliyuncs.com/pic/20220105123414.png) 
+
+the reason why we didn't get the linear speedup is because the imbanlanced workloads.
+
+As it's mentioned above, the brightness indicated the computation cost. We can observe that the middle part of view 1 is far more brighter that the other part of the image. So when we divide the workload into 3 threads, the second one will get the more work than others.
+
+Another evidence to support my hypothesis is that view1 has the exact same workloads when we divide it into two parts. Thus we get the linear speedup when we are using 2 threads.
+
+To conclude, workload imbanlance is the reason why we didn't get linear speedup
+
 ## Program 2: Vectorizing Code Using SIMD Intrinsics (25 points) ##
 
 Take a look at the function `clampedExpSerial` in `prog2_vecintrin/main.cpp` of the
