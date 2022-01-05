@@ -117,6 +117,12 @@ Another evidence to support my hypothesis is that view1 has the exact same workl
 
 To conclude, workload imbanlance is the reason why we didn't get linear speedup
 
+Instead using the blocking assignment, i've changed our static assignment policy to interleaved assignment. So every thread are working on the interleaved rows on the image.
+
+With this method, i've gained 6.90x speedup on view2, and 7.04x speedup on view1
+
+Since my machine has 12 logical core, so i can gain nearly 10x speedup when i've launched 12 threads. But only get 6x speedup when i've launched 16 threads. I think the performance will bounded by the context switching
+
 ## Program 2: Vectorizing Code Using SIMD Intrinsics (25 points) ##
 
 Take a look at the function `clampedExpSerial` in `prog2_vecintrin/main.cpp` of the

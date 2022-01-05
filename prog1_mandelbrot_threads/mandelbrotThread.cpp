@@ -12,8 +12,6 @@ typedef struct {
     int* output;
     int threadId;
     int numThreads;
-    int startRow;
-    int totalRows;
 } WorkerArgs;
 
 
@@ -24,6 +22,12 @@ extern void mandelbrotSerial(
     int maxIterations,
     int output[]);
 
+void mandelbrotStep(
+    float x0, float y0, float x1, float y1,
+    int width, int height,
+    int startRow, int totalRows, int step,
+    int maxIterations,
+    int output[]);
 
 //
 // workerThreadStart --
@@ -37,9 +41,9 @@ void workerThreadStart(WorkerArgs * const args) {
     // program that uses two threads, thread 0 could compute the top
     // half of the image and thread 1 could compute the bottom half.
 
-    mandelbrotSerial(args->x0, args->y0, args->x1, args->y1,
+    mandelbrotStep(args->x0, args->y0, args->x1, args->y1,
                      args->width, args->height,
-                     args->startRow, args->totalRows, 
+                     args->threadId, args->height, args->numThreads,
                      args->maxIterations, args->output);
 }
 
@@ -65,9 +69,6 @@ void mandelbrotThread(
     // Creates thread objects that do not yet represent a thread.
     std::thread workers[MAX_THREADS];
     WorkerArgs args[MAX_THREADS];
-    int rowPerThread = height / numThreads;
-    int remainingCnt = height % numThreads;
-    int lastRow = 0;
     for (int i=0; i<numThreads; i++) {
       
         // TODO FOR CS149 STUDENTS: You may or may not wish to modify
@@ -79,18 +80,12 @@ void mandelbrotThread(
         args[i].maxIterations = maxIterations;
         args[i].numThreads = numThreads;
         args[i].output = output;
-        args[i].startRow = lastRow;
         args[i].width = width;
         args[i].height = height;
-        args[i].totalRows = remainingCnt > 0 ? rowPerThread + 1 : rowPerThread;
         args[i].y1 = y1;
 
         args[i].threadId = i;
 
-        lastRow += args[i].totalRows;
-        if (remainingCnt > 0) {
-            remainingCnt--;
-        }
         // printf("%f %f %d %d\n", args[i].y0, args[i].y1, args[i].startRow, args[i].height);
     }
 
