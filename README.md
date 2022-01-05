@@ -303,6 +303,10 @@ the foreach loop to yield a more straightforward implementation.
 
 If you look into detailed technical material about the CPUs in the myth machines, you will find there are a complicated set of rules about how many scalar and vector instructions can be run per clock.  For the purposes of this assignment, you can assume that there are about as many 8-wide vector execution units as there are scalar execution units for floating point math.   
 
+### Answer:
+
+I've achieved about 4x speedup in ISPC program. The reason why we didn't get linear speedup is still we have imbanlanced workloads. Thus a lot of SIMD lanes are waiting for some specific lanes to complete
+
 ### Program 3, Part 2: ISPC Tasks (10 of 20 points) ###
 
 ISPCs SPMD execution model and mechanisms like `foreach` facilitate the creation
@@ -348,6 +352,16 @@ cores?
 
 _Answer_: Great question! And there are a lot of possible answers. Come to
 office hours.
+
+### Answer:
+
+I've gained about 10x speedup on my machine with 2 ISPC task
+
+![20220105154537](https://picsheep.oss-cn-beijing.aliyuncs.com/pic/20220105154537.png)
+
+And i've gained about 43x speedup with 32 ISPC task, amazing!
+
+For the thread abstraction and ISPC task. The OS will really create a bunch of threads when we are using thread abstraction, which may lead to a lot of context switching and overheads. ISPC task can map to thread, but it can also do something serial. IIRC ISPC task will do something like dynamic scheduling, which will give us a better performance and will not bothered by a very big task number.
 
 ## Program 4: Iterative `sqrt` (15 points) ##
 
