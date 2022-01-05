@@ -394,6 +394,20 @@ Note: This problem is a review to double-check your understanding, as it covers 
     implementation should be nearly as fast (or faster) than the binary 
     produced using ISPC. You may find the [Intel Intrinsics Guide](https://software.intel.com/sites/landingpage/IntrinsicsGuide/) 
     very helpful.
+
+### Answer:
+
+![20220105155647](https://picsheep.oss-cn-beijing.aliyuncs.com/pic/20220105155647.png)
+
+4x speedup for SIMD instruction and about 40x speedup for ISPC tasks
+
+Set the value all to 2.998, which will effectively use the SIMD lanes. I gained about 55x speedup for changing values.
+
+Since we have the vector with 8, so we can group those values by group size of 8. Every group has one 2.998, and others are all 1, this will bound the SIMD program back to serial version.
+
+![20220105160648](https://picsheep.oss-cn-beijing.aliyuncs.com/pic/20220105160648.png)
+
+We will get even worse performance than serial program due to the inefficiency use of SIMD lanes.
  
 ## Program 5: BLAS `saxpy` (15 points) ##
 
