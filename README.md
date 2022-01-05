@@ -429,6 +429,24 @@ elements used. `saxpy` is a *trivially parallelizable computation* and features 
   We're looking for a significant speedup here, not just a few percentage 
   points. If successful, describe how you did it and what a best-possible implementation on these systems might achieve.
 
+### Answer:
+
+I gained 1x speedup for ISPC tasks
+
+We are doing `result = scale * x + y`, we will do 4 memory access for 1 multiply and 1 add.
+
+![20220105161419](https://picsheep.oss-cn-beijing.aliyuncs.com/pic/20220105161419.png)
+
+So this is 2 FLOPS for 4 memory access. one memory access for float number is 4 bytes, thus, we have 1 FLOPS respond for 8 byte memory bandwidth.
+
+As the images shows above, we are bounded by the memory access(memory bandwidth) now, so we cann't improve this program. 
+
+For the extra credit, the reason we get 4 is we will have result read into cache line, and later flush it to memory.
+
+this is 2 memory operation. Then plus 1 load for x, 1 load for y. Then we get 4 here.
+
+The reason why cache didn't work here is that the program didn't have the locality.
+
 Notes: Some students have gotten hung up on this question (thinking too hard) in the past. We expect a simple answer, but the results from running this problem might trigger more questions in your head.  Feel free to come talk to the staff.
 
 ## For the curious ##
